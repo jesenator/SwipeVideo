@@ -3,32 +3,34 @@ import hub
 import time
 from utime import sleep_ms, ticks_ms, ticks_diff
 
-colorSensor = hub.port.D.device
+# make sure these 3 variables are the same as for the robot on display
+checkpoints = 16  # change if needed
+actionLength = 4  # in seconds, change if neede
+bufferLength = 5  # extra time between videos to allow time for the train to move. 3 at minimum
+
+colorSensor = hub.port.D.device  # change port if neccessary
+trainMotor = hub.port.B  # change port if neccessary
+colorSensor.mode(5)
 beeper = hub.sound
 beeper.volume(2)
-trainMotor = hub.port.B
-colorSensor.mode(5)
 
-threshold = 2000
+tieColorThreshold = 2000
 tieCounter = 0.0
 totalTracks = 16
 totalTies = 4 * totalTracks
-motorSpeed = 25  # default 35 - lower for shorter train momvement
-
-checkpoints = 16
-actionLength = 4
-bufferLength = 5  # 2 is absolute min (if train doesn't have to move)
+motorSpeed = 35  # default 35 - lower for shorter train momvement
 
 cycleLength = actionLength + bufferLength
 tiesPerCheckpoint = int(round(totalTies / checkpoints * 2)) / 2  # rounds to nearest .5
 
 
 def moveTrain(tiesPerCheckpoint, tieCounter):
+    # two different ways of determining if the train crosses a tie
     def getTieByRGB():
         colorSensor.mode(5)
         color = colorSensor.get()
         colorValues = (color[0] + color[1] + color[2])
-        tie = (colorValues < threshold)
+        tie = (colorValues < tieColorThreshold)
         return tie
     def getTieByColor():
         colorSensor.mode(0)
@@ -41,17 +43,17 @@ def moveTrain(tiesPerCheckpoint, tieCounter):
     currTies = 0.0
 
 #     print(tieCounter)
+    # move train until the correct number of ties have been passed
     while (tieCounter % tiesPerCheckpoint != 0 or currTies == 0):
         tie = getTieByColor()
         if tie != pastTie:
             tieCounter += .5
             currTies += .5
-#             beeper.beep(1000, 50, 0)
+#             beeper.beep(1000, 50, 0)  # for debug
 #             print(tieCounter)
-
         pastTie = tie
 
-    trainMotor.pwm(0)
+    trainMotor.pwm(0)  # stop motor once the checkpoint has been reached
     return tieCounter
 
 
