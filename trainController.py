@@ -5,7 +5,7 @@ from utime import sleep_ms, ticks_ms, ticks_diff
 
 # make sure these 3 variables are the same as for the robot on display
 checkpoints = 16  # change if needed
-actionLength = 4  # in seconds, change if neede
+actionLength = 4  # in seconds, change if needed
 bufferLength = 5  # extra time between videos to allow time for the train to move. 3 at minimum
 
 colorSensor = hub.port.D.device  # change port if neccessary
