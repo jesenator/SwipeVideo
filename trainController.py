@@ -8,8 +8,8 @@ checkpoints = 16  # change if needed
 actionLength = 4  # in seconds, change if needed
 bufferLength = 5  # extra time between videos to allow time for the train to move. 3 at minimum
 
-colorSensor = hub.port.D.device  # change port if neccessary
-trainMotor = hub.port.B  # change port if neccessary
+colorSensor = hub.port.D.device  # change port if necessary
+trainMotor = hub.port.B  # change port if necessary
 colorSensor.mode(5)
 beeper = hub.sound
 beeper.volume(2)
@@ -18,7 +18,7 @@ tieColorThreshold = 2000
 tieCounter = 0.0
 totalTracks = 16
 totalTies = 4 * totalTracks
-motorSpeed = 35  # default 35 - lower for shorter train momvement
+motorSpeed = 35  # default 35 - lower for shorter train movement
 
 cycleLength = actionLength + bufferLength
 tiesPerCheckpoint = int(round(totalTies / checkpoints * 2)) / 2  # rounds to nearest .5
@@ -80,7 +80,7 @@ for video in range(checkpoints):
     sleep_ms(1000)
 
     print("recording video " + str(video + 1) + " ... ", end="")
-    sleep_ms(1000 * (actionLength))
+    sleep_ms(1000 * actionLength)
     print("done")
 
     sleep_ms(1000)
